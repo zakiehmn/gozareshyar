@@ -1,0 +1,1 @@
+"اطلاعاتت:\n نام:{fist_name} \n نام خانوادگی:{last_name} \n شماره تلفن:{phone_number} \n پایه تحصیلی:{grade_study} \n "

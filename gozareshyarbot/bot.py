@@ -6,24 +6,29 @@ from .logical import *
 
 bot = telebot.TeleBot("5338255328:AAGFtVRKrFXGjxkoZWh2_-CnEBihqAQ375I", parse_mode=None)
 
-user_dict = {}
-
-
 @bot.message_handler(commands=['help', 'start'])
 def start_handler(message):
     welcome_msg = bot.send_message(message.chat.id, "به گزارش یار خوش آمدید")
     user_id = message.chat.id
-    user_dict['id'] = user_id
-    print(user_id)
     student = Student(user_id=user_id)
-    student.save()
+    try:
+        student.save()
+    except:
+        pass
     show_main_menu(message)
 
 def show_main_menu(message):
     choose_msg = bot.send_message(message.chat.id, "انتخاب کن", reply_markup=gen_main())
 
+@bot.message_handler(func = lambda message : message.text == 'بازگشت')
+def register_report(message):
+    show_main_menu(message)
+
 @bot.message_handler(func = lambda message : message.text == 'پروفایل من')
 def edit_profile(message):
+    user_id = message.chat.id
+    student_profile_text = get_student_profile_text(user_id)
+    bot.send_message(message.chat.id, student_profile_text)
     bot.send_message(message.chat.id, "برای تغییر یا ثبت مشخصاتت انتخاب کن", reply_markup=gen_edit_profile())
 
 @bot.message_handler(func = lambda message : message.text == 'گزارش یار')
@@ -57,7 +62,6 @@ def get_first_name(message):
     else:
         try:
             user_fname = message.text
-            user_dict['first_name'] = user_fname
             user_id = message.chat.id
             student = Student.objects.filter(user_id=user_id).update(first_name=user_fname)
             bot.send_message(message.chat.id, "اسمت ثبت شد", reply_markup=gen_main())
@@ -71,7 +75,6 @@ def get_last_name(message):
     else:
         try:
             user_lname = message.text
-            user_dict['last_name'] = user_lname
             user_id = message.chat.id
             student = Student.objects.filter(user_id=user_id).update(last_name=user_lname)
             bot.send_message(message.chat.id, "فامیلت ثبت شد",  reply_markup=gen_main())
@@ -85,7 +88,6 @@ def get_phone_number(message):
     else:
         try:
             phone_number = message.contact.phone_number
-            user_dict['phone_number'] = phone_number
             user_id = message.chat.id
             student = Student.objects.filter(user_id=user_id).update(phone_number=phone_number)
             bot.send_message(message.chat.id, "شمارت ثبت شد",  reply_markup=gen_main())
@@ -100,9 +102,6 @@ def get_grade(message):
         try:
             if message.text == "دهم" or "یازدهم" or "دوازدهم" :
                 user_grade = message.text
-                user_dict['grade'] = message.text
-                print(message.text)
-                # markup_remove = remove_markup(gen_grade)
                 user_id = message.chat.id
                 student = Student.objects.filter(user_id=user_id).update(grade=user_grade)
                 bot.send_message(message.chat.id, "پایه تحصیلیت ثبت شد", reply_markup=gen_main())
@@ -114,13 +113,7 @@ def get_grade(message):
 
 
 
-@bot.message_handler(func = lambda message : message.text == 'گزارش یار')
-def register_report(message):
-    bot.send_message(message.chat.id, "انتخاب کن", reply_markup=gen_register_report())
 
-@bot.message_handler(func = lambda message : message.text == 'ثبت گزارش امروز')
-def register_wake_up(message):
-    bot.send_message(message.chat.id, "برای ثبت ساعت بیدار شدنت انتخاب کن", reply_markup=gen_wake_up())
 
 @bot.callback_query_handler(func=lambda call: True)
 def register_wake_up_time(call):
