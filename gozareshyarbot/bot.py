@@ -8,6 +8,7 @@ bot = telebot.TeleBot("5338255328:AAGFtVRKrFXGjxkoZWh2_-CnEBihqAQ375I", parse_mo
 
 @bot.message_handler(commands=['help', 'start'])
 def start_handler(message):
+    print(message)
     welcome_msg = bot.send_message(message.chat.id, "به گزارش یار خوش آمدید")
     user_id = message.chat.id
     student = Student(user_id=user_id)
@@ -33,18 +34,13 @@ def edit_profile(message):
 
 @bot.message_handler(func = lambda message : message.text == 'گزارش یار')
 def register_report(message):
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     bot.send_message(message.chat.id, "انتخاب کن", reply_markup=gen_register_report())
 
 @bot.message_handler(func = lambda message : message.text == 'ثبت گزارش امروز')
 def register_wake_up(message):
     user_id = message.chat.id
-    student = get_student(user_id)
-    daily_report = DailyReport(student=student)
-    try:
-        daily_report.save()
-        # pass
-    except:
-        pass
+    create_daily_report(user_id)
     bot.send_message(message.chat.id, "برای ثبت ساعت بیدار شدنت انتخاب کن", reply_markup=gen_wake_up())
 
 
@@ -65,13 +61,13 @@ def set_profile_data(call):
 
 @bot.callback_query_handler(lambda call: call.data.startswith("gcb_"))
 def set_study_report_data(call):
+    user_id = call.message.chat.id
     if call.data ==  "gcb_wake_up":
             bot.edit_message_reply_markup(message_id = call.message.message_id,
                 chat_id = call.message.chat.id,
                 reply_markup=gen_types_time()
                 )
     elif call.data.startswith("gcb_w_"):
-        user_id = call.message.chat.id
         if call.data == "gcb_w_4_5":
             set_wake_up_time(user_id, "4_5")
         elif call.data == "gcb_w_5_6":
@@ -94,11 +90,12 @@ def set_study_report_data(call):
                               reply_markup=gen_subjects())
 
     elif call.data.startswith("gcb_s_"):
-        user_id = call.message.chat.id
         if call.data == "gcb_s_dini":
             set_subject(user_id, "دین و زندگی")
         elif call.data == "gcb_s_arabi":
             set_subject(user_id, "عربی")
+        elif call.data == "gcb_s_farsi":
+            set_subject(user_id, "ادبیات")
         elif call.data == "gcb_s_riazi":
             set_subject(user_id, "ریاضی")
         elif call.data == "gcb_s_zist":
@@ -115,10 +112,102 @@ def set_study_report_data(call):
             set_subject(user_id, "فلسفه و منطق")
         elif call.data == "gcb_s_back":
             show_main_menu(call.message)
+            # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         bot.edit_message_text(text='دقیقه ای که میخوای رو انتخاب کن', 
                               message_id=call.message.id, 
                               chat_id=call.message.chat.id,
                               reply_markup=gen_minutes())
+        
+    elif call.data.startswith("gcb_h_"):
+        if call.data == "gcb_h_10":
+            set_time(user_id, "10 دقیقه")
+        elif call.data == "gcb_h_20":
+            set_time(user_id, "20 دقیقه")
+        elif call.data == "gcb_h_30":
+            set_time(user_id, "30 دقیقه")
+        elif call.data == "gcb_h_40":
+            set_time(user_id, "40 دقیقه")
+        elif call.data == "gcb_h_50":
+            set_time(user_id, "50 دقیقه")
+        elif call.data == "gcb_h_60":
+            set_time(user_id, "60 دقیقه")
+        elif call.data == "gcb_h_70":
+            set_time(user_id, "70 دقیقه")
+        elif call.data == "gcb_h_80":
+            set_time(user_id, "80 دقیقه")
+        elif call.data == "gcb_h_90":
+            set_time(user_id, "90 دقیقه")
+        elif call.data == "gcb_h_100":
+            set_time(user_id, "100 دقیقه")
+        elif call.data == "gcb_h_110":
+            set_time(user_id, "110 دقیقه")
+        elif call.data == "gcb_h_120":
+            set_time(user_id, "120 دقیقه")
+        bot.edit_message_text(text='هذف شما : ', 
+                              message_id=call.message.id, 
+                              chat_id=call.message.chat.id,
+                              reply_markup=gen_study_goal())
+
+
+    elif call.data.startswith("gcb_sg_"):
+        if call.data == "gcb_sg_ok":
+            bot.edit_message_text(text=' هدفت ثبت شد', 
+                              message_id=call.message.id, 
+                              chat_id=call.message.chat.id,
+                              reply_markup=gen_start_study())
+        elif call.data == "gcb_sg_cancel":
+            delete_study_task(user_id)
+            show_main_menu(call.message)
+
+    elif call.data.startswith("gcb_t_"):
+        if call.data == "gcb_t_start":
+            bot.edit_message_text(text='مطالعت در حال انجامه ...', 
+                              message_id=call.message.id, 
+                              chat_id=call.message.chat.id,
+                              reply_markup=gen_end_study())
+        elif call.data == "gcb_t_cancel":
+            delete_study_task(user_id)
+            bot.edit_message_text(text='درسی که میخوای رو انتخاب کن', 
+                              message_id=call.message.id, 
+                              chat_id=call.message.chat.id,
+                              reply_markup=gen_subjects())
+
+        elif call.data == "gcb_sg_cancel":
+            bot.edit_message_text(text='درسی که میخوای رو انتخاب کن', 
+                              message_id=call.message.id, 
+                              chat_id=call.message.chat.id,
+                              reply_markup=gen_subjects())
+        elif call.data == "gcb_t_end":
+            bot.edit_message_text(text='\n تست هم زدی؟ مطالعه ات تموم شد', 
+                              message_id=call.message.id, 
+                              chat_id=call.message.chat.id,
+                              reply_markup=gen_exist_test())
+    elif call.data.startswith("gcb_test_"):
+        if call.data == "gcb_test_exist":
+            get_test_number_msg = bot.send_message(call.message.chat.id, 'تعداد تست هایی که زدی رو بفرست')
+            bot.register_next_step_handler(get_test_number_msg, get_test_number)
+            
+        elif call.data == "gcb_test_without": 
+               bot.edit_message_text(text='کیفیت مطالعه ات چطور بود؟', 
+                              message_id=call.message.id, 
+                              chat_id=call.message.chat.id,
+                              reply_markup=gen_quality_of_study())
+
+    elif call.data.startswith("gcb_q_"):
+        if call.data == "gcb_q_1":
+            set_quality_study(user_id, 1)
+        elif call.data == "gcb_q_2":
+            set_quality_study(user_id, 2)
+        elif call.data == "gcb_q_3":
+            set_quality_study(user_id, 3)
+        elif call.data == "gcb_q_4":
+            set_quality_study(user_id, 4)
+        elif call.data == "gcb_q_2":
+            set_quality_study(user_id, 5)
+        bot.edit_message_text(text='کیفیت مطالعه ات ثبت شد', 
+                              message_id=call.message.id, 
+                              chat_id=call.message.chat.id,
+                              reply_markup=None)
     else:
         show_main_menu(call.message)
 
@@ -182,23 +271,17 @@ def get_grade(message):
             bot.send_message(message.chat.id, "Exception")
 
 
+@bot.message_handler(content_types=['text'])
+def get_test_number(message):
+    try:
+        user_id = message.chat.id
+        print(user_id)
+        set_test_number(user_id, message.text)
+        print(message.text)
+        bot.send_message(message.chat.id, " تعداد تست هات ثبت شد \n کیفیت مطالعه ات چطور بود؟",  reply_markup=gen_quality_of_study())
+    except:
+        pass
 
-
-
-
-# @bot.callback_query_handler(func=lambda call: True)
-# def register_wake_up_time(call):
-#         print(call.data)
-#         if call.data == "cb_wake_up":
-#             bot.edit_message_reply_markup(
-#                 message_id = call.message.message_id,
-#                 chat_id = call.message.chat.id,
-#                 reply_markup=gen_types_time()
-#                 )
-#             print("ok")
-#         else:
-#             print("no")
-    
 
 bot.enable_save_next_step_handlers(delay=2)
 bot.load_next_step_handlers()

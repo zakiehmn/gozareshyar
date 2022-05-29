@@ -13,6 +13,7 @@ class Student(models.Model):
 
 class DailyReport(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    date = models.DateField(unique=True, null=True)
     wake_up_time = models.CharField(max_length=10)
     sleep_time = models.CharField(max_length=10)
 
@@ -20,6 +21,6 @@ class DailyReport(models.Model):
 class StudyTask(models.Model):
     daily_report = models.ForeignKey(DailyReport, on_delete=models.CASCADE)
     subject = models.CharField(max_length=40)
-    time = models.CharField(max_length=10)
+    time = models.CharField(max_length=20)
     number_of_test = models.IntegerField(null=True)
     quality_of_study = models.IntegerField(null=True)

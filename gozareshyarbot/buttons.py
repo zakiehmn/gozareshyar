@@ -35,7 +35,7 @@ def gen_wake_up():
     return markup
 
 def gen_types_time():
-    markup = InlineKeyboardMarkup(row_width=1)
+    markup = InlineKeyboardMarkup()
     markup.row_width = 2
     wake_up_btn1 = InlineKeyboardButton("4_5", callback_data="gcb_w_4_5")
     wake_up_btn2 = InlineKeyboardButton("5_6", callback_data="gcb_w_5_6")
@@ -72,7 +72,7 @@ def gen_share_phone():
     return markup
 
 def gen_subjects():
-    markup = InlineKeyboardMarkup(row_width=1)
+    markup = InlineKeyboardMarkup()
     markup.row_width = 2
     dinozendgi_btn = InlineKeyboardButton("دین و زندگی", callback_data="gcb_s_dini")
     arabi_btn = InlineKeyboardButton("عربی", callback_data="gcb_s_arabi")
@@ -90,24 +90,72 @@ def gen_subjects():
     return markup
 
 def gen_minutes():
-    markup = InlineKeyboardMarkup(row_width=1)
+    markup = InlineKeyboardMarkup()
     markup.row_width = 2
     min_10_btn = InlineKeyboardButton("10", callback_data="gcb_h_10")
-    min_20_btn = InlineKeyboardButton("20", callback_data="gcb_w_20")
-    min_30_btn = InlineKeyboardButton("30", callback_data="gcb_w_30")
-    min_40_btn = InlineKeyboardButton("40", callback_data="gcb_w_40")
-    min_50_btn = InlineKeyboardButton("50", callback_data="gcb_w_50")
-    min_60_btn = InlineKeyboardButton("60", callback_data="gcb_w_60")
-    min_70_btn = InlineKeyboardButton("70", callback_data="gcb_w_70")
-    min_80_btn = InlineKeyboardButton("80", callback_data="gcb_w_80")
-    min_90_btn = InlineKeyboardButton("90", callback_data="gcb_w_90")
-    min_100_btn = InlineKeyboardButton("100", callback_data="gcb_w_100")
-    min_110_btn = InlineKeyboardButton("110", callback_data="gcb_w_110")
-    min_120_btn = InlineKeyboardButton("120", callback_data="gcb_w_120")
+    min_20_btn = InlineKeyboardButton("20", callback_data="gcb_h_20")
+    min_30_btn = InlineKeyboardButton("30", callback_data="gcb_h_30")
+    min_40_btn = InlineKeyboardButton("40", callback_data="gcb_h_40")
+    min_50_btn = InlineKeyboardButton("50", callback_data="gcb_h_50")
+    min_60_btn = InlineKeyboardButton("60", callback_data="gcb_h_60")
+    min_70_btn = InlineKeyboardButton("70", callback_data="gcb_h_70")
+    min_80_btn = InlineKeyboardButton("80", callback_data="gcb_h_80")
+    min_90_btn = InlineKeyboardButton("90", callback_data="gcb_h_90")
+    min_100_btn = InlineKeyboardButton("100", callback_data="gcb_h_100")
+    min_110_btn = InlineKeyboardButton("110", callback_data="gcb_h_110")
+    min_120_btn = InlineKeyboardButton("120", callback_data="gcb_h_120")
     markup.add(min_10_btn, min_20_btn, min_30_btn, min_40_btn, min_50_btn,
                min_60_btn, min_70_btn, min_80_btn, min_90_btn, min_100_btn,
                min_110_btn, min_120_btn)
     return markup
+
+def gen_study_goal():
+    markup = InlineKeyboardMarkup()
+    markup.row_width = 2
+    ok_btn = InlineKeyboardButton("تایید", callback_data="gcb_sg_ok")
+    cancel_btn = InlineKeyboardButton("انصراف", callback_data="gcb_sg_cancel")
+    markup.add(ok_btn, cancel_btn)
+    return markup
+
+def gen_start_study():
+    markup = InlineKeyboardMarkup()
+    markup.row_width = 2
+    ok_btn = InlineKeyboardButton("شروع مطالعه", callback_data="gcb_t_start")
+    cancel_btn = InlineKeyboardButton("انصراف", callback_data="gcb_t_cancel")
+    markup.add(ok_btn, cancel_btn)
+    return markup
+
+def gen_end_study():
+    markup = InlineKeyboardMarkup()
+    markup.row_width = 2
+    end_btn = InlineKeyboardButton("پایان مطالعه", callback_data="gcb_t_end")
+    markup.add(end_btn)
+    return markup
+
+def gen_exist_test():
+    markup = InlineKeyboardMarkup()
+    markup.row_width = 1
+    ok_btn = InlineKeyboardButton("بله زدم", callback_data="gcb_test_exist")
+    cancel_btn = InlineKeyboardButton("نه نزدم", callback_data="gcb_test_without")
+    markup.add(ok_btn, cancel_btn)
+    return markup
+
+def gen_quality_of_study():
+    markup = InlineKeyboardMarkup()
+    markup.row_width = 1
+    quality_1_btn = InlineKeyboardButton("1", callback_data="gcb_q_1")
+    quality_2_btn = InlineKeyboardButton("2", callback_data="gcb_q_2")
+    quality_3_btn = InlineKeyboardButton("3", callback_data="gcb_q_3")
+    quality_4_btn = InlineKeyboardButton("4", callback_data="gcb_q_4")
+    quality_5_btn = InlineKeyboardButton("5", callback_data="gcb_q_5")
+    markup.add(quality_1_btn, quality_2_btn, quality_3_btn, quality_4_btn, quality_5_btn)
+    return markup
+
+
+
+
+
+
 
 
 
