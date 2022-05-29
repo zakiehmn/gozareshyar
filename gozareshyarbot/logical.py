@@ -73,3 +73,11 @@ def set_quality_study(user_id, quality_num):
     study_task = StudyTask.objects.filter(daily_report=daily_report).last()
     study_task.quality_of_study = quality_num
     study_task.save()
+
+def exist_report_today(user_id):
+    daily_report = get_daily_report_student(user_id)
+    date_now = date.today()
+    if daily_report.date == date_now:
+        print("false")
+        return False
+    

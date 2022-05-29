@@ -28,6 +28,13 @@ def gen_register_report():
     markup.add(register_btn, back_btn)
     return markup
 
+def gen_show_report():
+    markup = types.ReplyKeyboardMarkup(row_width=1, one_time_keyboard=True, resize_keyboard=True)
+    show_btn = types.KeyboardButton('مشاهده و ویرایش گزارش امروز')
+    back_btn = types.KeyboardButton('بازگشت')
+    markup.add(show_btn, back_btn)
+    return markup
+
 def gen_wake_up():
     markup = InlineKeyboardMarkup(row_width=1)
     wake_up_btn = InlineKeyboardButton("ثبت ساعت بیدار شدنت", callback_data="gcb_wake_up")

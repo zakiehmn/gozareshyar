@@ -34,14 +34,27 @@ def edit_profile(message):
 
 @bot.message_handler(func = lambda message : message.text == 'گزارش یار')
 def register_report(message):
+    user_id = message.chat.id
+    print("gozareshyar")
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    bot.send_message(message.chat.id, "انتخاب کن", reply_markup=gen_register_report())
+    if exist_report_today(user_id):
+        bot.send_message(message.chat.id, "انتخاب کن", reply_markup=gen_register_report())
+    else:
+        bot.send_message(message.chat.id, "انتخاب کن", reply_markup=gen_show_report())
+
 
 @bot.message_handler(func = lambda message : message.text == 'ثبت گزارش امروز')
 def register_wake_up(message):
     user_id = message.chat.id
     create_daily_report(user_id)
     bot.send_message(message.chat.id, "برای ثبت ساعت بیدار شدنت انتخاب کن", reply_markup=gen_wake_up())
+
+
+@bot.message_handler(func = lambda message : message.text == 'مشاهده و ویرایش گزارش امروز')
+def add_study_subject(message):
+    user_id = message.chat.id
+    bot.send_message(message.chat.id, "درسی که میخوای رو انتخاب کن", reply_markup=gen_subjects())
+    
 
 
 @bot.callback_query_handler(lambda call: call.data.startswith("cb_"))
