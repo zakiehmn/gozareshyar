@@ -158,6 +158,27 @@ def gen_quality_of_study():
     markup.add(quality_1_btn, quality_2_btn, quality_3_btn, quality_4_btn, quality_5_btn)
     return markup
 
+def gen_sleep():
+    markup = InlineKeyboardMarkup(row_width=1)
+    sleep_btn = InlineKeyboardButton("ثبت ساعت خوابیدنت", callback_data="gcb_sleep_time")
+    back_btn = InlineKeyboardButton("بازگشت", callback_data="gcb_sleep_back")
+    markup.add(sleep_btn, back_btn)
+    return markup
+
+def gen_types_time_sleep():
+    markup = InlineKeyboardMarkup()
+    markup.row_width = 2
+    wake_up_btn1 = InlineKeyboardButton("20_21", callback_data="gcb_ts_20_21")
+    wake_up_btn2 = InlineKeyboardButton("21_22", callback_data="gcb_ts_21_22")
+    wake_up_btn3 = InlineKeyboardButton("22_23", callback_data="gcb_ts_22_23")
+    wake_up_btn4 = InlineKeyboardButton("23_24", callback_data="gcb_ts_23_24")
+    wake_up_btn5 = InlineKeyboardButton("24_1", callback_data="gcb_ts_24_1")
+    wake_up_btn6 = InlineKeyboardButton("1_2", callback_data="gcb_ts_1_2")
+    wake_up_btn7 = InlineKeyboardButton("2_3", callback_data="gcb_ts_2_3")
+    wake_up_btn8 = InlineKeyboardButton("3_4", callback_data="gcb_ts_3_4")
+    markup.add(wake_up_btn1, wake_up_btn2, wake_up_btn3, wake_up_btn4,
+               wake_up_btn5, wake_up_btn6, wake_up_btn7, wake_up_btn8)
+    return markup
 
 
 

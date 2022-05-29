@@ -80,4 +80,10 @@ def exist_report_today(user_id):
     if daily_report.date == date_now:
         print("false")
         return False
+
+def set_sleep_time(user_id, time):
+    student = get_student(user_id)
+    daily_report = get_daily_report_student(user_id)
+    daily_report = DailyReport.objects.filter(student=student).update(sleep_time=time)
     
+# def get_report_text(user_id):

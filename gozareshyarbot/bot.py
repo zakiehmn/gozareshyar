@@ -215,12 +215,48 @@ def set_study_report_data(call):
             set_quality_study(user_id, 3)
         elif call.data == "gcb_q_4":
             set_quality_study(user_id, 4)
-        elif call.data == "gcb_q_2":
+        elif call.data == "gcb_q_5":
             set_quality_study(user_id, 5)
         bot.edit_message_text(text='کیفیت مطالعه ات ثبت شد', 
                               message_id=call.message.id, 
                               chat_id=call.message.chat.id,
+                              reply_markup=gen_sleep())
+
+    elif call.data.startswith("gcb_sl"):
+        if call.data == "gcb_sleep_time":
+            bot.edit_message_text(text='برای ثبت ساعت خوابیدنت انتخاب کن', 
+                              message_id=call.message.id, 
+                              chat_id=call.message.chat.id,
+                              reply_markup=gen_types_time_sleep())
+        elif call.data == "gcb_sleep_back": 
+            bot.edit_message_text(text='درسی که میخوای رو انتخاب کن', 
+                              message_id=call.message.id, 
+                              chat_id=call.message.chat.id,
+                              reply_markup=gen_subjects())
+                              
+    elif call.data.startswith("gcb_ts_"):
+        if call.data == "gcb_ts_20_21":
+            set_sleep_time(user_id, "20_21")
+        elif call.data == "gcb_ts_21_22":
+            set_sleep_time(user_id, "21_22")
+        elif call.data == "gcb_ts_22_23":
+            set_sleep_time(user_id, "22_23")
+        elif call.data == "gcb_ts_23_24":
+            set_sleep_time(user_id, "23_24")
+        elif call.data == "gcb_ts_24_1":
+            set_sleep_time(user_id, "24_1")
+        elif call.data == "gcb_ts_1_2":
+            set_sleep_time(user_id, "1_2")
+        elif call.data == "gcb_ts_2_3":
+            set_sleep_time(user_id, "2_3")
+        elif call.data == "gcb_ts_3_4":
+            set_sleep_time(user_id, "3_4")
+            bot.edit_message_text(text= 'ساعت خوابت ثبت شد', 
+                              message_id=call.message.id, 
+                              chat_id=call.message.chat.id,
                               reply_markup=None)
+            show_main_menu(call.message)
+            
     else:
         show_main_menu(call.message)
 
