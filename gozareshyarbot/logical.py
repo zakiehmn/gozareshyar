@@ -79,9 +79,11 @@ def set_quality_study(user_id, quality_num):
 def exist_report_today(user_id):
     daily_report = get_daily_report_student(user_id)
     date_now = date.today()
-    if daily_report.date == date_now:
+    if daily_report is not None:
+        if daily_report.date == date_now:
+            return True
         return False
-    return True
+    return False
 
 def set_date_report(user_id):
     daily_report =get_daily_report_student(user_id)
@@ -156,3 +158,19 @@ def tasks_text(daily_report):
     for task in study_tasks:
         output_text += str(get_task_text(task))+"\n"
     return str(output_text)
+
+def set_message_id(user_id, message_id):
+    daily_report = get_daily_report_student(user_id)
+    daily_report.message_id = message_id
+    print(daily_report.message_id)
+    daily_report.save()
+
+def exist_message_id(user_id):
+    daily_report = get_daily_report_student(user_id)
+    if daily_report.message_id is None:
+        return False
+    return True
+
+def get_messsage_id(user_id):
+    daily_report = get_daily_report_student(user_id)
+    return daily_report.message_id

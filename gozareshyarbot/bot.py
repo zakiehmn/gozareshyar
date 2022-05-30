@@ -35,11 +35,15 @@ def edit_profile(message):
 def register_report(message):
     user_id = message.chat.id
     if exist_report_today(user_id):
-        create_daily_report(user_id)
-        bot.send_message(message.chat.id, "انتخاب کن", reply_markup=gen_register_report())
-    else:
         get_daily_report_student(user_id)
         bot.send_message(message.chat.id, "انتخاب کن", reply_markup=gen_show_report())
+        # create_daily_report(user_id)
+        # bot.send_message(message.chat.id, "انتخاب کن", reply_markup=gen_register_report())
+    else:
+        create_daily_report(user_id)
+        bot.send_message(message.chat.id, "انتخاب کن", reply_markup=gen_register_report())
+        # get_daily_report_student(user_id)
+        # bot.send_message(message.chat.id, "انتخاب کن", reply_markup=gen_show_report())
 
 
 @bot.message_handler(func = lambda message : message.text == 'ثبت گزارش امروز')
@@ -224,7 +228,16 @@ def set_study_report_data(call):
                               chat_id=call.message.chat.id,
                               reply_markup=gen_sleep())
         report_text = get_report_text(user_id)
-        send_message = bot.send_message(-1001692571778, text=report_text)
+        if exist_message_id(user_id):
+            message_id = get_messsage_id(user_id)
+            bot.edit_message_text(message_id=message_id, 
+                              chat_id=-1001692571778,
+                              text=report_text
+                              )
+        else:
+            send_message = bot.send_message(-1001692571778, text=report_text)
+            set_message_id(user_id, send_message.id)
+
         # bot.edit_message_text(message_id=send_message.id, 
         #                       chat_id=-1001692571778,
         #                       text='edit test'

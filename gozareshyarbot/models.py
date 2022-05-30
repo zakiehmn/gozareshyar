@@ -16,6 +16,7 @@ class DailyReport(models.Model):
     date = models.DateField(null=True)
     wake_up_time = models.CharField(max_length=10)
     sleep_time = models.CharField(max_length=10)
+    message_id = models.CharField(max_length=10, null=True)
 
 
 class StudyTask(models.Model):
