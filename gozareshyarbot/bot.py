@@ -11,11 +11,7 @@ def start_handler(message):
     print(message)
     welcome_msg = bot.send_message(message.chat.id, "به گزارش یار خوش آمدید")
     user_id = message.chat.id
-    student = Student(user_id=user_id)
-    try:
-        student.save()
-    except:
-        pass
+    student = Student.objects.get_or_create(user_id=user_id)
     show_main_menu(message)
 
 def show_main_menu(message):
@@ -28,31 +24,37 @@ def register_report(message):
 @bot.message_handler(func = lambda message : message.text == 'پروفایل من')
 def edit_profile(message):
     user_id = message.chat.id
-    student_profile_text = get_student_profile_text(user_id)
-    bot.send_message(message.chat.id, student_profile_text)
+    try:
+        student_profile_text = get_student_profile_text(user_id)
+        bot.send_message(message.chat.id, student_profile_text)
+    except:
+        pass
     bot.send_message(message.chat.id, "برای تغییر یا ثبت مشخصاتت انتخاب کن", reply_markup=gen_edit_profile())
 
 @bot.message_handler(func = lambda message : message.text == 'گزارش یار')
 def register_report(message):
     user_id = message.chat.id
-    print("gozareshyar")
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if exist_report_today(user_id):
+        create_daily_report(user_id)
         bot.send_message(message.chat.id, "انتخاب کن", reply_markup=gen_register_report())
     else:
+        get_daily_report_student(user_id)
         bot.send_message(message.chat.id, "انتخاب کن", reply_markup=gen_show_report())
 
 
 @bot.message_handler(func = lambda message : message.text == 'ثبت گزارش امروز')
 def register_wake_up(message):
     user_id = message.chat.id
-    create_daily_report(user_id)
+    set_date_report(user_id)
     bot.send_message(message.chat.id, "برای ثبت ساعت بیدار شدنت انتخاب کن", reply_markup=gen_wake_up())
 
 
 @bot.message_handler(func = lambda message : message.text == 'مشاهده و ویرایش گزارش امروز')
 def add_study_subject(message):
     user_id = message.chat.id
+    # bot.send_message(-1001692571778, text="متن تست", reply_markup=gen_subjects())
+    report_text = get_report_text(user_id)
+    bot.send_message(message.chat.id, text=report_text)
     bot.send_message(message.chat.id, "درسی که میخوای رو انتخاب کن", reply_markup=gen_subjects())
     
 
@@ -125,37 +127,37 @@ def set_study_report_data(call):
             set_subject(user_id, "فلسفه و منطق")
         elif call.data == "gcb_s_back":
             show_main_menu(call.message)
-            # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         bot.edit_message_text(text='دقیقه ای که میخوای رو انتخاب کن', 
                               message_id=call.message.id, 
                               chat_id=call.message.chat.id,
                               reply_markup=gen_minutes())
         
+        
     elif call.data.startswith("gcb_h_"):
         if call.data == "gcb_h_10":
-            set_time(user_id, "10 دقیقه")
+            set_time(user_id, "10")
         elif call.data == "gcb_h_20":
-            set_time(user_id, "20 دقیقه")
+            set_time(user_id, "20")
         elif call.data == "gcb_h_30":
-            set_time(user_id, "30 دقیقه")
+            set_time(user_id, "30")
         elif call.data == "gcb_h_40":
-            set_time(user_id, "40 دقیقه")
+            set_time(user_id, "40")
         elif call.data == "gcb_h_50":
-            set_time(user_id, "50 دقیقه")
+            set_time(user_id, "50")
         elif call.data == "gcb_h_60":
-            set_time(user_id, "60 دقیقه")
+            set_time(user_id, "60")
         elif call.data == "gcb_h_70":
-            set_time(user_id, "70 دقیقه")
+            set_time(user_id, "70")
         elif call.data == "gcb_h_80":
-            set_time(user_id, "80 دقیقه")
+            set_time(user_id, "80")
         elif call.data == "gcb_h_90":
-            set_time(user_id, "90 دقیقه")
+            set_time(user_id, "90")
         elif call.data == "gcb_h_100":
-            set_time(user_id, "100 دقیقه")
+            set_time(user_id, "100")
         elif call.data == "gcb_h_110":
-            set_time(user_id, "110 دقیقه")
+            set_time(user_id, "110")
         elif call.data == "gcb_h_120":
-            set_time(user_id, "120 دقیقه")
+            set_time(user_id, "120")
         bot.edit_message_text(text='هذف شما : ', 
                               message_id=call.message.id, 
                               chat_id=call.message.chat.id,
@@ -221,6 +223,12 @@ def set_study_report_data(call):
                               message_id=call.message.id, 
                               chat_id=call.message.chat.id,
                               reply_markup=gen_sleep())
+        report_text = get_report_text(user_id)
+        send_message = bot.send_message(-1001692571778, text=report_text)
+        # bot.edit_message_text(message_id=send_message.id, 
+        #                       chat_id=-1001692571778,
+        #                       text='edit test'
+        #                       )
 
     elif call.data.startswith("gcb_sl"):
         if call.data == "gcb_sleep_time":
@@ -251,11 +259,8 @@ def set_study_report_data(call):
             set_sleep_time(user_id, "2_3")
         elif call.data == "gcb_ts_3_4":
             set_sleep_time(user_id, "3_4")
-            bot.edit_message_text(text= 'ساعت خوابت ثبت شد', 
-                              message_id=call.message.id, 
-                              chat_id=call.message.chat.id,
-                              reply_markup=None)
-            show_main_menu(call.message)
+        bot.send_message(call.message.chat.id, "ساعت خوابت ثبت شد")
+        show_main_menu(call.message)
             
     else:
         show_main_menu(call.message)
